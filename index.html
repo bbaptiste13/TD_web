@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Ma page web</title>
+    
+    <!-- Chargement de la bibliothèque Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+             ></script>
+      
+<!-- Il faut appeler jquery pour les boutons -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> 
+
+    <!-- Style pour la carte -->
+    <style>
+      #mapid {
+        height: 100vh; /* Hauteur pour occuper tout l'écran */
+        width: 100%;
+      }
+    </style>
+      
+    
+  </head>
+
+  <body>
+    <!-- Conteneur pour la carte -->
+    <div id="mapid"></div> 
+      
+<!-- pour afficher les boutons -->
+      <center><button id="boutongares">Afficher ou cacher les gares</button></center><br>
+      <center><button id="boutonortho">Afficher ou cacher l'orthophoto</button></center>
+      
+      
+
+    <!-- Script pour initialiser la carte -->
+    <script>
+      var mymap = L.map('mapid', {
+        center: [48.5695, 7.5702], // Coordonnées de centre
+        zoom: 6 // Niveau de zoom
+      });
+
+      // Ajout d'un fond de carte OpenStreetMap
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(mymap);
+        
+        var ortho = L.tileLayer.wms('https://www.datagrandest.fr/geoserver/ems/ows', {layers: 'EMS_Ortho_2022',format: 'image/png', transparent:true}).addTo(mymap); 
+        
+        
+      // Création et ajout des marqueurs
+      var gareStrasbourg = L.marker([48.5851, 7.7342]).bindPopup('Gare SNCF de Strasbourg').addTo(mymap);
+      var gareSelestat = L.marker([48.2600, 7.4428]).bindPopup('Gare SNCF de Sélestat').addTo(mymap);
+      var gareBenfeld = L.marker([48.3737, 7.5838]).bindPopup('Gare SNCF de Benfeld').addTo(mymap);
+      var gareSaverne = L.marker([48.7448, 7.3621]).bindPopup('Gare SNCF de Saverne').addTo(mymap);
+      var gareErstein = L.marker([48.4227, 7.6381]).bindPopup('Gare SNCF de Erstein').addTo(mymap); 
+        
+      var gares = L.layerGroup([gareStrasbourg, gareSaverne, gareSelestat, gareBenfeld, gareErstein]).addTo(mymap); 
+        
+        
+        
+// Fonction des boutons afficher        
+         $("#boutongares").click(function(event) {
+  event.preventDefault();
+  if(mymap.hasLayer(gares)) {
+    $(this).removeClass('selected');
+    mymap.removeLayer(gares);
+  } else {
+    mymap.addLayer(gares);
+    $(this).addClass('selected');
+  }
+});
+
+$("#boutonortho").click(function(event) {
+  event.preventDefault();
+  if(mymap.hasLayer(ortho)) {
+    $(this).removeClass('selected');
+    mymap.removeLayer(ortho);
+  } else {
+    mymap.addLayer(ortho);
+    $(this).addClass('selected');
+  }
+}); 
+        
+        
+    </script>
+  </body>
+</html>
